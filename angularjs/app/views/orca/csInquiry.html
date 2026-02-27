@@ -1,0 +1,99 @@
+<div class="employer-container">
+    <div class="employer-header"></div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h1>Customer Inquiry Form</h1>
+            <p></p>
+            <form name="form" novalidate="novalidate" ng-submit="submit()">
+                <fieldset class="form-horizontal">
+                    <legend>Your Information</legend>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Company Name</label>
+                        <p class="col-sm-8 form-control-static">{{company.Name}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Address</label>
+                        <p class="col-sm-8 form-control-static">{{company | address : 'Billing'}}</p>
+                    </div>
+                    <div ng-if="!input.newContact">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Your Name</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-static">{{contact.Name}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="emp_email">Email</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-static">{{contact.Email}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="phone">Phone Number</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-static">{{contact.Phone}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="input.newContact">
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-4 required">Your Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="name" class="form-control" ng-model="input.Name" ng-required="true"/>
+                                <p class="help-block validation">Your name is required</p>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-4 required" for="emp_email">Email</label>
+                            <div class="col-sm-8">
+                                <input name="emp_email" id="emp_email" class="form-control" type="email" ng-model="input.Email" required>
+                                <p class="help-block validation">Your email is required</p>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-4 required" for="phone">Phone Number</label>
+                            <div class="col-sm-8">
+                                <p class="help-block">Please include the area code.</p>
+                                <input type="tel" name="phone" id="phone" class="form-control" ng-model="input.Phone" required/>
+                                <p class="help-block validation">Your phone number is required</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">&nbsp;</label>
+                        <div class="col-sm-8">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" id="change_contact" ng-model="input.newContact" ng-click="toggleContact()"><label for="change_contact">Change contact information</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label col-sm-4 required">Subject</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="subject" class="form-control" ng-model="input.Subject" required/>
+                            <p class="help-block validation">Subject is required</p>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label col-sm-4 required">Comments</label>
+                        <div class="col-sm-8">
+                            <textarea name="note" id="note" rows="8" cols="75" class="form-control" ng-model="input.Description" required></textarea>
+                            <p class="help-block validation">please complete your comments</p>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-action">Submit</button>
+                    <button type="button" class="btn btn-default pull-right" ng-click="reset()">Clear</button>
+                    <div class="clearfix"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer>
+    <strong>Metro Employer Commute Services</strong><br>
+    Email: <a href="mailto:business.leadagent@kingcounty.gov?subject=Metro Online Inquiry">business.leadagent@kingcounty.gov</a>&nbsp;•&nbsp;Phone: 206-477-3700
+</footer>
+

@@ -1,0 +1,309 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h1>{{formTitle || 'Access Paratransit Comments'}}</h1>
+        <div class="intro">
+            <div ng-if="formHeader" ng-bind-html="formHeader"></div>
+            <p ng-if="!formHeader">Use this form to provide any comments including commendations, concerns, inquiries, and complaints regarding your experience with the Access Paratransit program.
+                For all other comments about King County Metro services, please go to <a href="https://kingcounty.gov/depts/transportation/metro/contact-us.aspx">Metro’s contact us page</a>.
+            </p>
+        </div>
+        <div class="text-danger mb-20" aria-hidden="true">* Required Fields</div>
+
+        <form name="form" novalidate="true" ng-submit="submit()">
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="commentType">Type of comment</label>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <select id="commentType" name="commentType" class="form-control" ng-model="input.commentType"
+                                ng-options="p.value as p.label for p in commentTypes" ng-required="true">
+                            <option value="" selected="selected">Choose...</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">The type of comment is required.</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label required">Please select one of the following contact choices:</label>
+                <div class="radio radio-primary" ng-repeat="r in categories">
+                    <input type="radio" ng-model="input.category" value="{{r.value}}" id="cat_{{$index}}" ng-change="setChoice()"><label for="cat_{{$index}}">{{r.label}}</label>
+                </div>
+            </div>
+            <div ng-if="input.category =='rider'" class="sub-fieldset">
+                <p>Please provide your name (required) and an additional piece of identification from the following list:</p>
+                <div class="form-group" show-errors>
+                    <label class="control-label required" for="customerName">Access Rider's Name</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" name="customerName" id="customerName" class="form-control" ng-model="input.name" ng-required="true"/>
+                        </div>
+                    </div>
+                    <p class="help-block validation" role="alert">Access Rider's Name is required</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="accessID">Access ID</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" name="accessID" id="accessID" class="form-control" ng-model="input.accessId" ng-blur="checkCustomer()"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="a3phone">Home Phone Number</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="tel" name="a3phone" id="a3phone" class="form-control" ng-model="input.phone"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" show-errors>
+                    <label class="control-label" for="a3email">Email Address</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="email" name="a3email" id="a3email" class="form-control" ng-model="input.email"
+                                   ng-required="input.contactTarget =='rider' && input.contactPreference =='Email'"/>
+                        </div>
+                    </div>
+                    <p class="help-block validation">Email is required</p>
+                </div>
+            </div>
+            <div ng-if="input.category =='proxy'" class="sub-fieldset">
+                <div class="form-group" show-errors>
+                    <label class="control-label required" for="contact">Contact Name</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" name="contact" id="contact" class="form-control" ng-model="input.contactPerson"/>
+                        </div>
+                    </div>
+                    <p class="help-block validation">Contact person is required</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="phone">Contact Phone Number</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="tel" name="phone" id="phone" class="form-control" ng-model="input.contactPhone"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" show-errors>
+                    <label class="control-label" ng-class="input.contactTarget =='me' && input.contactPreference =='Email' ? 'required' : ''" for="email">Contact Email</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="email" name="email" id="email" class="form-control" ng-model="input.contactEmail" ng-required="input.contactTarget =='me' && input.contactPreference =='Email'"/>
+                        </div>
+                    </div>
+                    <p class="help-block validation">Contact Email is required</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="relationship">Relationship to Access Rider</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" name="relationship" id="relationship" class="form-control" ng-model="input.relationship"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="radio radio-primary">
+                        <input type="radio" ng-model="input.contactTarget" value="me" id="target_me"><label for="target_me">Send response to me</label>
+                    </div>
+                    <div class="radio radio-primary">
+                        <input type="radio" ng-model="input.contactTarget" value="rider" id="target_rider"><label for="target_rider">Send response to the rider</label>
+                    </div>
+                </div>
+                <div class="form-group" show-errors>
+                    <p class="help-block">Please provide the Access rider's name (required) and an additional piece of identification from the following list:</p>
+                    <label class="control-label required" for="customerName">Access Rider's Name</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" name="customerName" id="customerName" class="form-control" ng-model="input.name" ng-required="true"/>
+                        </div>
+                    </div>
+                    <p class="help-block validation" role="alert">Access Rider's Name is required</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="accessID">Access ID</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" name="accessID" id="accessID" class="form-control" ng-model="input.accessId" ng-blur="checkCustomer()"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="phone">Access Rider's Home Phone Number</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="tel" name="a3phone" id="a3phone" class="form-control" ng-model="input.phone" ng-blur="checkCustomer()"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" show-errors>
+                    <label class="control-label" for="a3email">Access Rider's Email</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="email" name="a3email" id="a3email" class="form-control" ng-model="input.email" ng-blur="checkCustomer()" ng-required="input.contactTarget =='rider' && input.contactPreference =='Email'"/>
+                        </div>
+                    </div>
+                    <p class="help-block validation">Access Rider's email is required</p>
+                </div>
+            </div>
+            <div ng-if="input.category =='saw'" class="sub-fieldset">
+                <p>Please provide your name (required) and phone number</p>
+                <div class="form-group" show-errors>
+                    <label class="control-label required" for="customerName">Contact Name</label>
+                    <div class="row">
+                        <div class="col-sm-6"><input type="text" name="customerName" id="customerName" class="form-control" ng-model="input.name" ng-required="true"/></div>
+                    </div>
+                    <p class="help-block validation" role="alert">Contact Name is required</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="phone">Contact Phone Number</label>
+                    <div class="row">
+                        <div class="col-sm-6"><input type="tel" name="phone" id="phone" class="form-control" ng-model="input.phone"/></div>
+                    </div>
+                </div>
+                <div class="form-group" show-errors>
+                    <label class="control-label" ng-class="input.contactPreference =='Email' ? 'required' : ''" for="phone">Contact Email</label>
+                    <div class="row">
+                        <div class="col-sm-6"><input type="email" name="email" id="email" class="form-control" ng-model="input.email" ng-required="input.contactPreference =='Email'"/></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <p>
+                    Email is Metro Customer Services' preferred way of providing responses for inquiries and comments. 
+                    If you are unable to use email, please select your preferred method of response below and provide the contact information
+                </p>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="radio radio-primary" ng-repeat="r in preferences">
+                            <input type="radio" ng-model="input.contactPreference" value="{{r.value}}" id="channel_{{$index}}" ng-change="selectContactPreference()"><label for="channel_{{$index}}">{{r.label}}</label>
+                        </div>
+                        <div class="form-group" ng-if="input.contactPreference != 'Email' && input.contactPreference != 'No Response'" show-errors>
+                            <input type="text" class="form-control" name="contactData" ng-required="true" ng-model="input.contactData"
+                                   placeholder="Please type your contact information"/>
+                            <p class="help-block validation">Please provide your contact information</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="subject">Category of feedback</label>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <select name="subject" id="subject" class="form-control" ng-model="input.subject" ng-required="true" ng-options="p for p in subjects">
+                            <option value="">Choose...</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="help-block validation">Please enter category of feedback</p>
+            </div>
+            <div class="form-group" show-errors ng-if="input.subject =='My other issue'">
+                <label class="control-label required">My other issue</label>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" ng-model="input.otherSubject" ng-required="true"  name="otherSubject">
+                    </div>
+                </div>
+                <p class="help-block validation">Please enter something here</p>
+            </div>
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="date" id="date-help">Incident Date</label>
+                <div class="row">
+                    <div class="col-sm-3 col-xs-8">
+                        <div class="input-group">
+                            <input id="date" type="text" class="form-control" name="date" ng-model="input.date" ng-required="true" uib-datepicker-popup="{{cal.format}}"
+                                   is-open="cal.opened.ride" datepicker-options="cal.options" alt-input-formats="cal.inputFormats" ng-change="selectDate()" ng-blur="checkCustomer()" aria-describedby="date-help"/>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default" tabindex="-1" aria-hidden="true" ng-click="cal.open('ride')" aria-label="calendar">
+                                    <i class="glyphicon glyphicon-calendar"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-3">
+                        <button type="button" class="btn btn-default" ng-click="findTrip()" ng-if="control.allowTripLookup"><i class="glyphicon glyphicon-search"></i> Find Trips
+                        </button>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">Date is required and must be within last 30 days. Accepted formats: Month/Day/Year or Month/Day</p>
+            </div>
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="time" id="time-label">Time of Day</label>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input type="time" id="time" name="time" class="form-control" ng-model="input.time" ng-required="true" aria-describedby="time-label" time-input/>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">Please select Time.</p>
+            </div>
+            <div class="form-group" ng-if="a3Trips">
+                <label class="control-label" id="trip-label">Which trip are you referring to?</label>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th width="60"></th>
+                        <th>Scheduled Time</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="r in a3Trips">
+                        <td>
+                            <div class="radio radio-primary">
+                                <input type="radio" value="{{r.Id}}" id="trip_{{$index}}" ng-model="input.trip" ng-change="selectTrip()"><label for="trip_{{$index}}"></label>
+                            </div>
+                        </td>
+                        <td>
+                            {{r.time}}
+                        </td>
+                        <td>
+                            {{r.origin}}
+                        </td>
+                        <td>{{r.destination}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="location" id="location-label">Where did this happen?</label>
+                <p>Please be as descriptive as possible</p>
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <input type="text" id="location" name="location" class="form-control" ng-model="input.location" aria-describedby="location-label"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="comment">Your Comment</label>
+                <p id="comment-help">
+                    Please provide any information necessary for us to research your comment or concern.
+                    Real humans read and respond to your questions and comments.
+                    Abusive, racist or other hateful language is not acceptable.
+                </p>
+                <textarea id="comment" name="comment" class="form-control" rows="8" cols="75" ng-model="input.comment" ng-required="true" ng-maxlength="4000" aria-labelledby="comment-help"></textarea>
+                <div ng-messages="form.comment.$error">
+                    <p ng-message="required" class="help-block validation" role="alert">You need to type something here.</p>
+                    <p ng-message="maxlength" class="help-block validation" role="alert">Maximum allowed length is 4000</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" id="upload-prompt">
+                    Your Uploads:
+                    <button type="button" class="btn btn-default" ngf-select="true" ngf-change="onFileSelect($files,$event)" aria-describedby="upload-prompt">Upload</button>
+                </label>
+                <ol class="list-group" ng-show="files.length > 0">
+                    <li class="list-group-item" ng-repeat="f in files" role="alert">
+                        <span class="text-success glyphicon glyphicon-refresh spinner" ng-show="f.uploading" aria-hidden="true"></span>
+                        <span class="text-success glyphicon glyphicon-ok" ng-show="!f.uploading" aria-hidden="true"></span>
+                        <span class="text-success hidden">File uploaded successfully</span>
+                        {{f.name}}
+                    </li>
+                </ol>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-lg btn-action">Submit</button>
+                <button type="button" class="btn btn-lg btn-default pull-right" ng-click="cancel()">Cancel</button>
+            </div>
+
+        </form>
+    </div>
+</div>

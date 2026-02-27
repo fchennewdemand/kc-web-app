@@ -41,6 +41,7 @@ export const handler: Schema["query"]["functionHandler"] = async (event, context
             req = req.body
         }
     }
+
     try {
         console.log(`sending request ${JSON.stringify(req)} to endpoint ${endpoint}`)
         let res = await axios.post(endpoint, req, options);

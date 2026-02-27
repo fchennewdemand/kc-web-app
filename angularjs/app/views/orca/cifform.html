@@ -1,0 +1,732 @@
+<form name="form" class="form-horizontal" novalidate>
+
+    <div class="cif-container" ng-switch="mode">
+        <div class="header"></div>
+        <h3 class="field">{{input.company.Name}} - Customer Information Form</h3>
+        <div class="panel panel-default" ng-switch-when="edit">
+            <div class="panel-body">
+                <p class="help-block field">Please review and update this information. When the form is complete, the information will be locked and
+                    we'll be able to price your contract.</p>
+                <fieldset>
+                    <div class="form-group" ng-if="contract.CIF_Submitted_By__c">
+                        <label class="control-label col-sm-3">Last Submitted By</label>
+                        <p class="col-sm-9 form-control-static">{{contract.CIF_Submitted_By__c}} - {{contract.CIF_Submitted_Time__c | date :
+                            'short'}}</p>
+                    </div>
+                    <div class="form-group" ng-if="input.company.Latest_Contract_End__c">
+                        <label class="control-label col-sm-3">Latest Contract Ends</label>
+                        <p class="col-sm-9 form-control-static">{{input.company.Latest_Contract_End__c | date : 'longDate' : 'UTC'}}</p>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>BUSINESS ACCOUNT INFORMATION</legend>
+                    <div class="form-group" ng-if="input.company.BAID__c">
+                        <label class="control-label col-sm-3">ORCA Business Account ID</label>
+                        <p class="col-sm-9 form-control-static">{{input.company.BAID__c}}</p>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label col-sm-3 required">Company Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="name" ng-model="input.company.Name" required/>
+                            <p class="help-block validation">Company Name is required</p>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label col-sm-3 required">Federal Tax ID#</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="taxId" ng-model="input.company.Tax_Id__c" required/>
+                            <p class="help-block validation">Federal Tax ID is required</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Industry</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" name="industry" ng-model="input.company.Industry"
+                                    ng-options="p.value as p.label for p in industryTypes">
+                                <option value="">Choose...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label col-sm-3 required">Billing Address</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="street" ng-model="input.company.BillingStreet" required/>
+                            <p class="help-block validation">Address is required</p>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label col-sm-3 required">City</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" ng-model="input.company.BillingCity" name="city" required/>
+                            <p class="help-block validation">City is required</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8 state">
+                            <div class="form-group" show-errors>
+                                <label class="control-label col-sm-5 required">State</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" ng-model="input.company.BillingState" name="state"
+                                            ng-options="p.value as p.label for p in states" required>
+                                        <option value="">Choose...</option>
+                                    </select>
+                                    <p class="help-block validation">State is required</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group zip" show-errors>
+                                <label class="control-label col-sm-6 required">ZIP Code</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" ng-model="input.company.BillingPostalCode" name="zip" required/>
+                                    <p class="help-block validation">ZIP Code is required</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label col-sm-3">County</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" ng-model="input.company.County__c" name="county"/>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <div>
+                        <legend>Contacts</legend>
+                        <div class="btn-header">
+                            <button type="button" class="btn btn-sm btn-action" ng-click="newContact()">New Contact</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <p class="help-block field">You need to specify Primary contact, Signatory contact and Billing contact</p>
+
+                    <fieldset class="sub-fieldset" ng-repeat="r in input.contacts" id="contact_{{$index}}">
+                        <div>
+                            <legend>{{r.con.Name}}</legend>
+                            <div class="btn-header">
+                                <button type="button" class="btn btn-sm btn-danger" ng-click="removeContact(r)">Remove</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group field">
+                            <div class="checkbox checkbox-primary checkbox-inline" ng-repeat="c in roles">
+                                <input type="checkbox" ng-model="r.roles[c]" value="c" id="role_{{c}}" ng-click="checkRole(r,c)"><label
+                                for="role_{{c}}">{{c}}</label>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-3 required">Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="cname_{{$index}}" ng-model="r.con.Name" required/>
+                                <p class="help-block validation">Name is required</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Title</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="ctitle_{{$index}}" ng-model="r.con.Title"/>
+                                <p class="help-block validation">Title is required</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3 hidden-xs">&nbsp;</label>
+                            <div class="col-sm-9">
+                                <div class="checkbox checkbox-primary">
+                                    <input type="checkbox" ng-model="control.copyAddress[$index]" id="copy_{{$index}}" ng-click="copyAddress($index)">
+                                    <label for="copy_{{$index}}">Same as Company Billing Address</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="!control.copyAddress[$index]">
+                            <div class="form-group" show-errors>
+                                <label class="control-label col-sm-3 required">Address</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="cstreet_{{$index}}" ng-model="r.con.MailingStreet" required/>
+                                    <p class="help-block validation">Address is required</p>
+                                </div>
+                            </div>
+                            <div class="form-group" show-errors>
+                                <label class="control-label col-sm-3 required">City</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" ng-model="r.con.MailingCity" name="ccity_{{$index}}" required/>
+                                    <p class="help-block validation">City is required</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-8 state">
+                                    <div class="form-group" show-errors>
+                                        <label class="control-label col-sm-5 required">State</label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control" ng-model="r.con.MailingState" name="cstate_{{$index}}"
+                                                    ng-options="p.value as p.label for p in states" required>
+                                                <option value="">Choose...</option>
+
+                                            </select>
+                                            <p class="help-block validation">State is required</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group zip" show-errors>
+                                        <label class="control-label col-sm-6 required">ZIP Code</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" ng-model="r.con.MailingPostalCode" name="czip_{{$index}}"
+                                                   required/>
+                                            <p class="help-block validation">ZIP Code is required</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-3 required">Phone</label>
+                            <div class="col-sm-9">
+                                <input type="tel" name="cphone_{{$index}}" ng-model="r.con.Phone" class="form-control" required/>
+                                <p class="help-block validation">Phone is required</p>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-3 required">Email</label>
+                            <div class="col-sm-9">
+                                <input type="email" name="cemail_{{$index}}" ng-model="r.con.Email" class="form-control" required/>
+                                <p class="help-block validation">Email is required</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </fieldset>
+                <fieldset ng-if="input.customContract">
+                    <div>
+                        <legend>Contracted Services</legend>
+                        <div class="btn-header">
+                            <button type="button" class="btn btn-sm btn-action" ng-click="newService()">New Service</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <fieldset class="sub-fieldset" ng-repeat="r in input.services" id="service_{{$index}}">
+                        <div>
+                            <legend>{{r.serviceType}}</legend>
+                            <div class="btn-header">
+                                <button type="button" class="btn btn-sm btn-danger" ng-click="removeService(r)">Remove</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group field" ng-if="!r.single">
+                            <div class="checkbox checkbox-primary" ng-repeat="t in transitAgencies">
+                                <input type="checkbox" ng-model="r.transitAgencies[t.value]" value="{{t.value}}"
+                                       id="transit_{{$parent.$index}}_{{$index}}" ng-click="checkTransitAgency(r,t.value)">
+                                <label for="transit_{{$parent.$index}}_{{$index}}">{{t.label}}</label>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="!r.single">
+                            <label class="control-label col-sm-3">Subsidy</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="r.subsidy"/>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="!r.single">
+                            <label class="control-label col-sm-3">Additional Terms</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" ng-model="r.restrictions"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                </fieldset>
+                <fieldset ng-if="!input.customContract">
+                    <legend>Primary Work Site</legend>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3 hidden-xs">&nbsp;</label>
+                        <div class="col-sm-9">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" ng-model="input.company.Primary_Work_Site__c" id="primary_site"><label for="primary_site">Primary
+                                Account is Work Site</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3 hidden-xs">&nbsp;</label>
+                        <div class="col-sm-9">
+                            <div class="checkbox checkbox-primary">
+                                <input type="checkbox" ng-model="control.copyAddress.primary" id="copy_primary" ng-click="copyPrimaryAddress()">
+                                <label for="copy_primary">Same as Company Billing Address</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="!control.copyAddress.primary">
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-3 required">Address</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="primary_street" ng-model="input.company.ShippingStreet" required/>
+                                <p class="help-block validation">Address is required</p>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-3 required">City</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="input.company.ShippingCity" name="primary_city" required/>
+                                <p class="help-block validation">City is required</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-8 state">
+                                <div class="form-group" show-errors>
+                                    <label class="control-label col-sm-5 required">State</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" ng-model="input.company.ShippingState" name="primary_state"
+                                                ng-options="p.value as p.label for p in states" required>
+                                            <option value="">Choose...</option>
+                                        </select>
+                                        <p class="help-block validation">State is required</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group zip" show-errors>
+                                    <label class="control-label col-sm-6 required">ZIP Code</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" ng-model="input.company.ShippingPostalCode" name="primary_zip"
+                                               required/>
+                                        <p class="help-block validation">ZIP Code is required</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label col-sm-3 required">Number of Employees</label>
+                        <div class="col-sm-9">
+                            <input type="number" name="count" ng-model="input.eligibleEmployees" class="form-control" ng-change="calcCards()"
+                                   ng-required="true"/>
+                            <p class="help-block validation">Please enter number of eligible employees</p>
+                            <p class="help-block">Number of eligible employees in chosen category (if covering multiple worksites, please click "Add
+                                Site" button below to add additional sites)</p>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="input.passportPrice">
+                        <label class="control-label col-sm-3">Passport Price</label>
+                        <p class="col-sm-9 form-control-static">{{input.passportPrice | currency}}</p>
+                    </div>
+                    <div class="form-group field">
+                        <p class="help-block">Amount, if any, participating employees will pay for Business Passport card (you may change
+                            participating employees up to 50% of price per pass)</p>
+                        <div class="checkbox checkbox-primary checkbox-inline">
+                            <input type="radio" name="copayType" ng-model="input.copayType" value="" id="copay_no"><label for="copay_no">No Employee
+                            Contribution</label>
+                        </div>
+                        <div class="checkbox checkbox-primary checkbox-inline" ng-repeat="r in copayTypes">
+                            <input type="radio" name="copayType" ng-model="input.copayType" value="{{r.value}}" id="copay_{{$index}}"><label
+                            for="copay_{{$index}}">By {{r.label}}</label>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors ng-if="input.copayType">
+                        <label class="control-label col-sm-3 required">{{input.copayType =='Amount' ? 'Annual Amount' : input.copayType}}</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control" name="copay" ng-model="input.copay" ng-required="true"/>
+                            <p class="help-block validation">{{input.copayType}} is required</p>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset ng-if="!input.customContract">
+                    <div>
+                        <legend>Additional Work Sites</legend>
+                        <div class="btn-header">
+                            <button type="button" class="btn btn-sm btn-action" ng-click="newSite()">New Site</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <fieldset class="sub-fieldset" ng-repeat="r in input.sites" id="site_{{$index}}">
+                        <div>
+                            <legend>{{r.site.Name}}</legend>
+                            <div class="btn-header">
+                                <button type="button" class="btn btn-danger btn-sm" ng-click="removeSite(r)">Remove</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-3 required">Site Name</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="siteName_{{$index}}" ng-model="r.site.Name" required/>
+                                <p class="help-block validation">Site Name is required</p>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-3 required">Address</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="site_street_{{$index}}" ng-model="r.site.ShippingStreet" required/>
+                                <p class="help-block validation">Address is required</p>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-3 required">City</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="r.site.ShippingCity" name="site_city_{{$index}}" required/>
+                                <p class="help-block validation">City is required</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-8 state">
+                                <div class="form-group" show-errors>
+                                    <label class="control-label col-sm-5 required">State</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" ng-model="r.site.ShippingState" name="site_state_{{$index}}"
+                                                ng-options="p.value as p.label for p in states" required>
+                                            <option value="">Choose...</option>
+                                        </select>
+                                        <p class="help-block validation">State is required</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group zip" show-errors>
+                                    <label class="control-label col-sm-6 required">ZIP Code</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" ng-model="r.site.ShippingPostalCode" name="site_zip_{{$index}}"
+                                               required/>
+                                        <p class="help-block validation">ZIP Code is required</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors>
+                            <label class="control-label col-sm-3 required">Number of Employees</label>
+                            <div class="col-sm-9">
+                                <input type="number" name="site_employees_{{$index}}" class="form-control" ng-model="r.eligibleEmployees"
+                                       ng-change="calcCards()" ng-required="true"/>
+                                <p class="help-block validation">Please enter number of eligible employees</p>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-if="r.passportPrice">
+                            <label class="control-label col-sm-3">Passport Price</label>
+                            <p class="col-sm-9 form-control-static">{{r.passportPrice | currency}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3 hidden-xs">&nbsp;</label>
+                            <div class="col-sm-9">
+                                <div class="checkbox checkbox-primary">
+                                    <input type="checkbox" ng-model="control.copay[$index]" id="site_copay_check_{{$index}}">
+                                    <label for="site_copay_check_{{$index}}">Employee contribution is different from primary work site</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group field" ng-if="control.copay[$index]">
+                            <p class="help-block">Amount, if any, participating employees will pay for Business Passport card (you may change
+                                participating employees up to 50% of price per pass)</p>
+                            <div class="checkbox checkbox-primary checkbox-inline">
+                                <input type="radio" name="site_copayType_{{$index}}" ng-model="r.copayType" value=""
+                                       id="site_copay_no_{{$index}}"><label for="site_copay_no_{{$index}}">No Employee
+                                Contribution</label>
+                            </div>
+                            <div class="checkbox checkbox-primary checkbox-inline" ng-repeat="p in copayTypes">
+                                <input type="radio" name="site_copay_{{$parent.$index}}_{{$index}}" ng-model="r.copayType" value="{{p.value}}"
+                                       id="site_copay_{{$parent.$index}}_{{$index}}"><label
+                                for="site_copay_{{$parent.$index}}_{{$index}}">By
+                                {{p.label}}</label>
+                            </div>
+                        </div>
+                        <div class="form-group" show-errors ng-if="r.copayType">
+                            <label class="control-label col-sm-3 required">{{r.copayType =='Amount' ? 'Annual Amount' : r.copayType}}</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" name="site_copay_{{$index}}" ng-model="r.copay" ng-required="true"/>
+                                <p class="help-block validation">{{r.copayType}} is required</p>
+                            </div>
+                        </div>
+                    </fieldset>
+                </fieldset>
+                <fieldset ng-if="input.customContract">
+                    <legend>BUSINESS TERMS</legend>
+                    <div class="form-group" show-errors>
+                        <label class="control-label col-sm-3 required">Participant Count</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" name="participantCount" ng-model="input.participantCount" ng-required="true"/>
+                            <p class="help-block validation">Participant Count is required</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Participant Eligibility</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" ng-model="input.participantEligibility" rows="5"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Custom Payment Terms</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" ng-model="input.customPaymentTerms" rows="5"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset ng-if="!input.customContract">
+                    <legend>BUSINESS TERMS</legend>
+                    <div class="form-group field" show-errors>
+                        <p class="help-block">
+                            Payment to Passport Contracts can be made by Check or ACH/wire transfer only
+                        </p>
+                        <input type="hidden" class="form-control" name="payment" ng-model="input.paymentTerm" required/>
+                        <div class="checkbox checkbox-primary" ng-repeat="r in paymentTerms">
+                            <input type="radio" ng-model="input.paymentTerm" value="{{r.value}}" id="payment_{{$index}}"/><label
+                            for="payment_{{$index}}">{{r.label}}</label>
+                        </div>
+                        <p class="help-block validation">Please check payment terms</p>
+                    </div>
+                    <div class="form-group field" show-errors>
+                        <p class="help-block">
+                            Choose a category of employees who will be eligible for ORCA Business passport at the company Work Site(s).
+                            Please remember to include transit and non-transit riders.
+                        </p>
+                        <input type="hidden" name="employeeEligibility" class="form-control" ng-model="input.employeeEligibility" required/>
+                        <div class="checkbox checkbox-primary" ng-repeat="r in employeeEligibilities">
+                            <input type="radio" ng-model="input.employeeEligibility" id="employeeEligibility{{$index}}" value="{{r.value}}"/><label
+                            for="employeeEligibility{{$index}}">{{r.label}}</label>
+                        </div>
+                        <p class="help-block validation">Please check eligible employees</p>
+                    </div>
+                    <div class="form-group" show-errors ng-if="input.employeeEligibility =='Other'">
+                        <label class="control-label col-sm-3 required">Other Eligiblity</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="eligibilityOther" class="form-control" ng-model="input.employeeEligibilityOther" required/>
+                            <p class="help-block validation">Please enter other eligibility</p>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Additional Information</legend>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Number of new Cards requested</label>
+                        <div class="col-sm-9">
+                            <div class="col-xs-6" style="margin-left: -15px;"><input type="number" class="form-control" ng-model="input.newCards"/></div>
+                            <div class="col-xs-6"><div class="checkbox checkbox-primary">
+                                <input type="checkbox" ng-model="input.cardLogo" id="cardLogo"><label for="cardLogo">Add Card Logo</label></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label col-sm-3 required">Submitted By</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="submittedBy" class="form-control" ng-model="input.submittedBy" required/>
+                            <p class="help-block validation">Submitted by is required</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Customer Satisfaction</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" ng-model="input.satisfaction" ng-options="p.value as p.label for p in satisfactions">
+                                <option value="">Choose...</option>
+                            </select>
+                            <p class="help-block">Please rate your customer service experience</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Comments</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" ng-model="input.comments" rows="5"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-xs-4 text-left">
+                        <button type="button" class="btn btn-action" ng-click="submit(false)">Save Form</button>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                        <button type="button" class="btn btn-action" ng-click="submit(true)">SUBMIT</button>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <button type="button" class="btn btn-default" ng-click="reset()">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-switch-when="view">
+            <div class="panel-body form-horizontal form-view">
+                <fieldset>
+                    <p class="help-block field">Form is complete.</p>
+                    <div class="form-group" ng-if="contract.CIF_Submitted_By__c">
+                        <label class="control-label col-sm-3">Last Submitted By</label>
+                        <p class="col-sm-9 form-control-static">{{contract.CIF_Submitted_By__c}} - {{contract.CIF_Submitted_Time__c | date :
+                            'short'}}</p>
+                    </div>
+                    <div class="form-group" ng-if="input.company.Latest_Contract_End__c">
+                        <label class="control-label col-sm-3">Latest Contract Ends</label>
+                        <p class="col-sm-9 form-control-static">{{input.company.Latest_Contract_End__c | date : 'longDate' : 'UTC'}}</p>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>BUSINESS ACCOUNT INFORMATION</legend>
+                    <div class="form-group" ng-if="input.company.BAID__c">
+                        <label class="control-label col-sm-3">ORCA Business Account ID</label>
+                        <p class="col-sm-9 form-control-static">{{input.company.BAID__c}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Company Name</label>
+                        <p class="col-sm-9 form-control-static">{{input.company.Name}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Federal Tax ID#</label>
+                        <p class="col-sm-9 form-control-static">{{input.company.Tax_Id__c}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Industry</label>
+                        <p class="col-sm-9 form-control-static">{{input.company.Industry}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Billing Address</label>
+                        <p class="col-sm-9 form-control-static">{{input.company | address: 'billing'}}</p>
+                    </div>
+                </fieldset>
+                <fieldset ng-if="input.customContract">
+                    <legend>BUSINESS TERMS</legend>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Participant Count</label>
+                        <p class="col-sm-9 form-control-static">{{input.participantCount}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Participant Eligibility</label>
+                        <p class="col-sm-9 form-control-static">{{input.participantEligibility}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Custom Payment Terms</label>
+                        <p class="col-sm-9 form-control-static" ng-bind-html="input.customPaymentTerms"></p>
+                    </div>
+                </fieldset>
+                <fieldset ng-if="!input.customContract">
+                    <legend>BUSINESS TERMS</legend>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Payment Terms</label>
+                        <p class="col-sm-9 form-control-static">{{input.paymentTerm}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Eligible Employees</label>
+                        <p class="col-sm-9 form-control-static">{{input.employeeEligibility =='Other' ? input.employeeEligibilityOther :
+                            input.employeeEligibility}}</p>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Contacts</legend>
+                    <fieldset class="sub-fieldset" ng-repeat="r in contacts">
+                        <legend>{{r.role}} Contact</legend>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Name</label>
+                            <p class="col-sm-9 form-control-static">{{r.Name}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Title</label>
+                            <p class="col-sm-9 form-control-static">{{r.Title}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Address</label>
+                            <p class="col-sm-9 form-control-static">{{r | address : 'mailing'}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Phone</label>
+                            <p class="col-sm-9 form-control-static">{{r.Phone}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Email</label>
+                            <p class="col-sm-9 form-control-static">{{r.Email}}</p>
+                        </div>
+                    </fieldset>
+                </fieldset>
+                <fieldset ng-if="input.customContract">
+                    <legend>Contracted Services</legend>
+                    <fieldset class="sub-fieldset" ng-repeat="r in input.services">
+                        <legend>{{r.serviceType}}</legend>
+                        <div class="form-group field" ng-if="!r.single">
+                            <label class="control-label col-sm-3">Contracted Agencies</label>
+                            <p class="col-sm-9 form-control-static">{{r.agencyNames}}</p>
+                        </div>
+                        <div class="form-group" ng-if="!r.single">
+                            <label class="control-label col-sm-3">Subsidy</label>
+                            <p class="col-sm-9 form-control-static">{{r.subsidy}}</p>
+                        </div>
+                        <div class="form-group" ng-if="!r.single">
+                            <label class="control-label col-sm-3">Restrictions</label>
+                            <p class="col-sm-9 form-control-static">{{r.restrictions}}</p>
+                        </div>
+                    </fieldset>
+                </fieldset>
+
+                <fieldset ng-if="!input.customContract">
+                    <legend>Primary Work Site</legend>
+                    <div class="form-group field">
+                        <p class="help-block">Primary Account is Work Site: {{input.company.Primary_Work_Site__c ? 'Yes' : 'No'}} </p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Address</label>
+                        <p class="col-sm-9 form-control-static">{{input.company | address : 'Shipping'}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Number of Employees</label>
+                        <p class="col-sm-9 form-control-static">{{input.eligibleEmployees}}</p>
+                    </div>
+                    <div class="form-group" ng-if="input.passportPrice">
+                        <label class="col-sm-3 control-label">Passport Price</label>
+                        <p class="col-sm-9 form-control-static">{{input.passportPrice | currency}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Employee Contribution</label>
+                        <p class="col-sm-9 form-control-static">{{showContribution(input)}}</p>
+                    </div>
+                </fieldset>
+                <fieldset ng-if="!input.customContract">
+                    <legend>Additional Work Sites</legend>
+                    <fieldset class="sub-fieldset" ng-repeat="r in input.sites">
+                        <legend>{{r.site.Name}}</legend>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Site Name</label>
+                            <p class="col-sm-9 form-control-static">{{r.site.Name}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Address</label>
+                            <p class="col-sm-9 form-control-static">{{r.site | address : 'Shipping'}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Number of Employees</label>
+                            <p class="col-sm-9 form-control-static">{{r.eligibleEmployees}}</p>
+                        </div>
+                        <div class="form-group" ng-if="r.passportPrice">
+                            <label class="control-label col-sm-3">Passport Price</label>
+                            <p class="col-sm-9 form-control-static">{{r.passportPrice | currency}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3">Employee Contribution</label>
+                            <p class="col-sm-9 form-control-static">{{showContribution(r)}}</p>
+                        </div>
+                    </fieldset>
+                </fieldset>
+                <fieldset>
+                    <legend>Additional Information</legend>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Number of new Cards requested</label>
+                        <div class="col-sm-9">
+                            <p class="col-sm-9 form-control-static">{{input.newCards}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Add Card Logo</label>
+                        <div class="col-sm-9">
+                            <p class="col-sm-9 form-control-static">{{input.cardLogo ? 'Yes' : 'No'}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Submitted By</label>
+                        <p class="col-sm-9 form-control-static">{{contract.CIF_Submitted_By__c}}, {{contract.CIF_Submitted_Time__c | date :
+                            'short'}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Customer Satisfaction</label>
+                        <p class="col-sm-9 form-control-static">{{input.satisfaction}}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Comments</label>
+                        <p class="col-sm-9 form-control-static">{{input.comments}}</p>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="panel-footer text-center">
+                <button type="button" class="btn btn-default" ng-click="home()">Close</button>
+            </div>
+        </div>
+    </div>
+</form>

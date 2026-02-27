@@ -1,0 +1,209 @@
+<div class="employer-container">
+    <div class="employer-header">
+        <h1>Market & Business Development</h1>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h1>Company Information Form</h1>
+            <div class="intro">
+                <p>Please send us your company information using the form below. Completing ALL of the information will provide us the very best opportunity to match your needs with
+                    successful transportation program recommendations.
+                </p>
+                <p>If your company already has an ORCA Business Account and you need technical assistance, please send a request for help directly to <a
+                    href="mailto:business.leadagent@kingcounty.gov?subject=Metro Online Inquiry">business.leadagent@kingcounty.gov</a> with your account number and description of your problem,
+                    including any related card serial numbers and/or order numbers.</p>
+            </div>
+            <div class="text-danger" aria-hidden="true">* Required Fields</div>
+            <p></p>
+            <form name="form" novalidate="novalidate" ng-submit="submit()">
+                <fieldset>
+                    <legend>Your Contact Information</legend>
+                    <div class="form-group" show-errors>
+                        <label class="control-label required" for="name">Name</label>
+                        <input name="name" id="name" class="form-control" type="text" ng-model="input.name" required>
+                        <p class="help-block validation">Your name is required</p>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label required" for="position">Position/Department</label>
+                        <input name="position" id="position" class="form-control" type="text" ng-model="input.position" required>
+                        <p class="help-block validation">Your position is required</p>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label required" for="emp_email">Email</label>
+                        <input name="emp_email" id="emp_email" class="form-control" placeholder="name@domain.com" type="email" ng-model="input.email" required>
+                        <p class="help-block validation">Your email is required</p>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label required" for="phone">Phone Number</label>
+                        <p class="help-block">Please include the area code.</p>
+                        <input type="tel" name="phone" id="phone" class="form-control" ng-model="input.phone" required/>
+                        <p class="help-block validation">Your phone number is required</p>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>About Your Company</legend>
+                    <div class="form-group" show-errors>
+                        <label class="control-label required" for="company">Company Name</label>
+                        <input name="company" id="company" class="form-control" type="text" ng-model="input.company" required>
+                        <p class="help-block validation">The company name is required</p>
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label required" for="address">Address</label>
+                        <input name="address" id="address" class="form-control" type="text" ng-model="input.street" required>
+                        <p class="help-block validation">The address is required</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="suite">Suite, Building Number or Mailstop</label>
+                        <input name="suite" id="suite" class="form-control" type="text" ng-model="input.suite">
+                    </div>
+                    <div class="form-group" show-errors>
+                        <label class="control-label required" for="city">City</label>
+                        <input name="city" id="city" class="form-control" type="text" ng-model="input.city" required>
+                        <p class="help-block validation">The city is required</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group" show-errors>
+                                <label class="control-label required" for="state">State</label>
+                                <select name="state" id="state" ng-model="input.state" class="form-control" required>
+                                    <option value="">Choose...</option>
+                                    <option value="AL">Alabama</option>
+                                    <option value="AK">Alaska</option>
+                                    <option value="AZ">Arizona</option>
+                                    <option value="AR">Arkansas</option>
+                                    <option value="CA">California</option>
+                                    <option value="CO">Colorado</option>
+                                    <option value="CT">Connecticut</option>
+                                    <option value="DE">Delaware</option>
+                                    <option value="DC">District Of Columbia</option>
+                                    <option value="FL">Florida</option>
+                                    <option value="GA">Georgia</option>
+                                    <option value="HI">Hawaii</option>
+                                    <option value="ID">Idaho</option>
+                                    <option value="IL">Illinois</option>
+                                    <option value="IN">Indiana</option>
+                                    <option value="IA">Iowa</option>
+                                    <option value="KS">Kansas</option>
+                                    <option value="KY">Kentucky</option>
+                                    <option value="LA">Louisiana</option>
+                                    <option value="ME">Maine</option>
+                                    <option value="MD">Maryland</option>
+                                    <option value="MA">Massachusetts</option>
+                                    <option value="MI">Michigan</option>
+                                    <option value="MN">Minnesota</option>
+                                    <option value="MS">Mississippi</option>
+                                    <option value="MO">Missouri</option>
+                                    <option value="MT">Montana</option>
+                                    <option value="NE">Nebraska</option>
+                                    <option value="NV">Nevada</option>
+                                    <option value="NH">New Hampshire</option>
+                                    <option value="NJ">New Jersey</option>
+                                    <option value="NM">New Mexico</option>
+                                    <option value="NY">New York</option>
+                                    <option value="NC">North Carolina</option>
+                                    <option value="ND">North Dakota</option>
+                                    <option value="OH">Ohio</option>
+                                    <option value="OK">Oklahoma</option>
+                                    <option value="OR">Oregon</option>
+                                    <option value="PA">Pennsylvania</option>
+                                    <option value="RI">Rhode Island</option>
+                                    <option value="SC">South Carolina</option>
+                                    <option value="SD">South Dakota</option>
+                                    <option value="TN">Tennessee</option>
+                                    <option value="TX">Texas</option>
+                                    <option value="UT">Utah</option>
+                                    <option value="VT">Vermont</option>
+                                    <option value="VA">Virginia</option>
+                                    <option value="WA">Washington</option>
+                                    <option value="WV">West Virginia</option>
+                                    <option value="WI">Wisconsin</option>
+                                    <option value="WY">Wyoming</option>
+                                </select>
+                                <p class="help-block validation">The state is required</p>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group" show-errors>
+                                <label class="control-label required" for="zip">Zip/Postal Code</label>
+                                <input placeholder="5 digits only" name="zip" id="zip" maxlength="5" type="number" class="form-control" ng-model="input.zip" required>
+                                <p class="help-block validation">The zip/postal code is required</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="benefits_offered">Does your company offer a commute benefit?</label>
+                        <select name="benefits_offered" id="benefits_offered" class="form-control" ng-model="input.commuteBenefit">
+                            <option value="">Choose...</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                            <option value="Being considered">It's being considered</option>
+                            <option value="Does not know">I don't know</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label class="control-label" for="emp_total">Number of employees</label>
+                                <p class="help-block">The approximate number of employees at the address listed above.</p>
+                                <input name="emp_total" id="emp_total" class="form-control" type="number" ng-model="input.empTotal">
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label class="control-label" for="emp_using">Employees using Public Transportation</label>
+                                <p class="help-block">The approximate number of employees currently using public transportation (if known).</p>
+                                <input name="emp_using" id="emp_using" class="form-control" type="number" ng-model="input.empUsing">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Information Request</legend>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label required">Please tell us how we can help</label>
+                                <div class="form-group" show-errors>
+                                    <span>Would you like assistance reviewing ORCA options for a new Business Account? </span>
+                                    <select name="orca_options" id="orca_options" class="form-control" ng-model="input.orcaOption" required>
+                                        <option value="">Answer...</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                    <p class="help-block validation">Please answer yes or no</p>
+                                </div>
+                                <div class="form-group" show-errors>
+                                    <span>Do you have questions about starting a pre-tax benefit for employees? </span>
+                                    <select name="benefit_questions" id="benefit_questions" class="form-control" ng-model="input.benefitQuestion" required>
+                                        <option value="">Answer...</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                    <p class="help-block validation">Please answer yes or no</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label" for="other">Other Questions or Comments</label>
+                                <textarea name="other" id="other" rows="8" cols="75" class="form-control" ng-model="input.comment"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-action">Send Information</button>
+                    <button type="button" class="btn btn-default pull-right" ng-click="reset()">Clear</button>
+                    <div class="clearfix"></div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<footer>
+    <strong>Market & Business Development</strong><br>
+    Email: <a href="mailto:business.leadagent@kingcounty.gov?subject=Metro Online Inquiry">business.leadagent@kingcounty.gov</a>&nbsp;•&nbsp;Phone: 206-477-3700
+</footer>
+

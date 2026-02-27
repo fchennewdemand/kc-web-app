@@ -1,0 +1,198 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h1>{{ formTitle || 'Stop/Shelter' }}</h1>
+
+        <div class="intro">
+            <div ng-if="formHeader" ng-bind-html="formHeader"></div>
+            <p ng-if="!formHeader">
+                Use this form for questions, suggestions, commendations or complaints about stops/shelters.
+                Your feedback is important to us. Please provide as much detail as possible so staff can research your concerns and
+                ensure your feedback is handled appropriately.
+            </p>
+        </div>
+        <div class="text-danger mb-20" aria-hidden="true">* Required Fields</div>
+
+        <form name="form" novalidate="true" ng-submit="submit()">
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="issue">What kind of issue(s) are you reporting</label>
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <select id="issue" name="issue" class="form-control" ng-model="input.stopIssue"
+                                ng-options="p.value as p.label for p in stopIssues" ng-required="true">
+                            <option value="" selected="selected">Choose...</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">The type of issue is required.</p>
+            </div>
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="commentType">Type of comment</label>
+
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <select id="commentType" name="commentType" class="form-control" ng-model="input.commentType"
+                                ng-options="p.value as p.label for p in commentTypes" ng-required="true">
+                            <option value="" selected="selected">Choose...</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">The type of comment is required.</p>
+            </div>
+            <div class="form-group" show-errors="true">
+                <label class="control-label required" for="name">Your Name</label>
+
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <input type="text" id="name" name="name" class="form-control" ng-model="input.name" ng-required="true"/>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">Your name is required.</p>
+            </div>
+            <div class="form-group" show-errors="true">
+                <label class="control-label required" for="email">Email</label>
+
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <input type="email" id="email" name="email" class="form-control" ng-model="input.email" placeholder="name@domain.com"
+                               ng-required="true"/>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">Your email is required.</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="phone">Phone Number</label>
+
+                <p id="phone-help">Please include the area code.</p>
+
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <input type="phone" id="phone" name="phone" class="form-control" ng-model="input.phone" aria-describedby="phone-help"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" show-errors="true">
+                <label class="control-label required" for="contactPreference">How do you want to be contacted?</label>
+
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <select id="contactPreference" name="contactPreference" class="form-control" ng-model="input.contactPreference"
+                                ng-options="p.value as p.label for p in preferences" ng-required="true">
+                            <option value="" selected="selected">Choose...</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">Please tell us how to contact you.</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="orca">ORCA Card Number</label>
+
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <input type="text" id="orca" name="orca" class="form-control" ng-model="input.orca"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="date">Date of Observation</label>
+
+                <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                        <div class="input-group">
+                            <input type="text" id="date" class="form-control" name="date" ng-model="input.date" ng-required="true" uib-datepicker-popup="{{date.format}}" is-open="date.opened"
+                                   max-date="date.maxDate" alt-input-formats="date.inputFormats"/>
+                            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" tabindex="-1" aria-hidden="true" ng-click="date.open($event)" aria-label="calendar"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                        </div>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">Date of Observation is required. Accepted formats: Month/Day/Year or Month/Day</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label required" for="time" id="time-label">Time of Observation</label>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input type="time" id="time" name="time" class="form-control" ng-model="input.time" ng-required="true" time-input/>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">Time of Observation is required.</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="route">Route Number</label>
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <select id="route" name="route" class="form-control" ng-model="input.route"
+                                ng-options="p.value as p.label for p in routes" ng-required="true">
+                            <option value="" selected="selected">Choose...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="stop">Stop ID (if known)</label>
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <div class="input-group" style="width: 100%;">
+                            <input type="text" id="stop" name="stop" class="form-control" ng-model="input.stop"
+                                   uib-typeahead="stop.value as stop.label for stop in searchStops($viewValue)"
+                                   typeahead-loading="loadingStops" typeahead-no-results="noStopsFound"
+                                   typeahead-min-length="2" typeahead-on-select="onStopSelect($item, $model, $label)"/>
+                            <span class="input-group-addon" ng-show="loadingStops"><i class="glyphicon glyphicon-refresh"></i></span>
+                        </div>
+                        <div ng-show="noStopsFound">No stops found</div>
+                        <p class="help-block">This is the 3- to 5-digit number painted on the top, left-hand corner of the shelter.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" show-errors>
+                <label class="control-label" ng-class="input.stop ? '' : 'required'" for="location">Address/Location</label>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input type="text" id="location" name="location" class="form-control" ng-model="input.location" ng-required="!input.stop"/>
+                        <p class="help-block validation" role="alert">Address/Location is required</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-xs-12" aria-disabled="true" ng-show="input.stopId">
+                <map zoom="16" style="height:300px;"></map>
+            </div>
+
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="comment">Your Comment</label>
+                <p id="comment-help">
+                    Please provide any information necessary for us to research your comment or concern.
+                    Real humans read and respond to your questions and comments.
+                    Abusive, racist or other hateful language is not acceptable.
+                </p>
+                <textarea id="comment" name="comment" class="form-control" rows="8" cols="75" ng-model="input.comment" ng-required="true" ng-maxlength="4000" aria-labelledby="comment-help"></textarea>
+                <div ng-messages="form.comment.$error">
+                    <p ng-message="required" class="help-block validation" role="alert">You need to type something here.</p>
+                    <p ng-message="maxlength" class="help-block validation" role="alert">Maximum allowed length is 4000</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" id="upload-prompt">
+                    Your Uploads:
+                    <button type="button" class="btn btn-default" ngf-select="true" ngf-change="onFileSelect($files,$event)" aria-describedby="upload-prompt">Upload</button>
+                </label>
+                <ol class="list-group" ng-show="files.length > 0">
+                    <li class="list-group-item" ng-repeat="f in files" role="alert"><span class="text-success">
+          <i class="glyphicon glyphicon-refresh spinner" ng-show="f.uploading" aria-hidden="true"></i>
+          <i class="glyphicon glyphicon-ok" ng-show="!f.uploading" aria-hidden="true"></i>
+          <span class="hidden">File uploaded successfully</span>
+          </span> {{ f.name }}
+                    </li>
+                </ol>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-lg btn-action">Submit</button>
+                <button type="button" class="btn btn-lg btn-default pull-right" ng-click="cancel()">Cancel</button>
+            </div>
+
+        </form>
+    </div>
+</div>

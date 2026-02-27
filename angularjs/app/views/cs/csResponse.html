@@ -1,0 +1,52 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form name="form" novalidate="novalidate" ng-submit="submit()">
+            <fieldset class="form-view">
+                <legend>Case Information - {{case.CaseNumber}}</legend>
+                <div class="form-group">
+                    <label class="control-label">Opened: {{case.CreatedDate | date : 'short'}} <span ng-if="case.IsClosed">, Closed: {{case.ClosedDate | date : 'short'}}</span></label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Subject: {{case.Subject}}</label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Description</label>
+                    <p class="form-control-static" ng-bind-html="case.Description | html"></p>
+                </div>
+                <div class="form-group" ng-if="case.Response_to_Customer__c">
+                    <label class="control-label">Feedback</label>
+                    <p class="form-control-static" ng-bind-html="case.Response_to_Customer__c | html"></p>
+                </div>
+            </fieldset>
+            <fieldset ng-if="!case.IsClosed">
+                <div class="form-group" show-errors>
+                    <label class="control-label required" for="other">Your Comments</label>
+                    <textarea name="other" id="other" rows="8" cols="75" class="form-control" ng-model="input.comment" required></textarea>
+                    <p class="help-block validation">please complete your comments</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" id="upload-prompt">
+                        Your Uploads:
+                        <button type="button" class="btn btn-default" ngf-select="true" ngf-change="onFileSelect($files,$event)" aria-describedby="upload-prompt">Upload</button>
+                    </label>
+                    <ol class="list-group" ng-show="files.length > 0">
+                        <li class="list-group-item" ng-repeat="f in files" role="alert">
+                            <div class="text-success" style="display: inline-block">
+                                <i class="glyphicon glyphicon-refresh spinner" ng-show="f.uploading" aria-hidden="true"></i>
+                                <i class="glyphicon glyphicon-ok" ng-show="!f.uploading" aria-hidden="true"></i>
+                                <span class="hidden">File uploaded successfully</span>
+                            </div>
+                            {{f.name}}
+                        </li>
+                    </ol>
+                </div>
+            </fieldset>
+            <div class="form-group voffset3" ng-if="!case.IsClosed">
+                <button type="submit" class="btn btn-action">Send Information</button>
+                <button type="button" class="btn btn-default pull-right" ng-click="close()">Close</button>
+                <div class="clearfix"></div>
+            </div>
+        </form>
+    </div>
+</div>
+

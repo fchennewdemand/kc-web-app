@@ -1,0 +1,119 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">King County Metro Internal Response</h3></div>
+    <div class="panel-body">
+        <form name="form" novalidate="novalidate">
+            <fieldset class="form-view form-horizontal">
+                <legend>Case Information</legend>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Case Reference No</label>
+                    <p class="form-control-static col-sm-8">
+                        {{case.CaseNumber}}
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Incident Date</label>
+                    <p class="form-control-static col-sm-8">
+                        {{case.Incident_Date__c | date : 'short'}}
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Subject</label>
+                    <p class="form-control-static col-sm-8">
+                        {{case.Subject}}
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Case Classifications</label>
+                    <p class="form-control-static col-sm-8">
+                        {{classifications.join(', ')}}
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Case Description</label>
+                    <div class="form-control-static col-sm-8" ng-bind-html="case.Description | html"></div>
+                </div>
+            </fieldset>
+            <fieldset class="form-horizontal">
+                <legend>Internal Response</legend>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Response Due Date</label>
+                    <p class="form-control-static col-sm-8">
+                        {{ir.Response_Due_Date__c | date : 'shortDate' : 'UTC'}}
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Days Remaining</label>
+                    <p class="form-control-static col-sm-8">
+                        {{ir.Days_Remaining__c}}
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Case Reference</label>
+                    <div class="form-control-static col-sm-8">
+                        <a ng-click="viewCase()">Click here to view Case Details</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Instructions</label>
+                    <div class="form-control-static col-sm-8">
+                        {{ir.Note__c}}
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="form-horizontal" ng-if="allowInput">
+                <legend>Your Reply</legend>
+                <div class="form-group" show-errors>
+                    <label class="control-label required col-sm-4">Your Name</label>
+                    <div class="col-sm-8">
+                        <input type="name" class="form-control" name="name" ng-model="input.Responder_Name__c" ng-required="true"/>
+                        <p class="help-block validation">Name is required</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Organization Name</label>
+                    <div class="col-sm-8">
+                        <input type="orgName" class="form-control" name="orgName" ng-model="input.Responder_Organization__c"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label required col-sm-4">Status</label>
+                    <div class="col-sm-8">
+                        <select name="status" class="form-control" ng-model="input.Status__c" ng-options="p.value as p.label for p in statuses">
+                            <option value="">Select...</option>
+                        </select>
+                        <p class="help-block validation">Status is required</p>
+                    </div>
+                </div>
+                <div class="form-group" show-errors>
+                    <label class="control-label required col-sm-4" for="comment">Comments</label>
+                    <div class="col-sm-8">
+                        <textarea name="comment" id="comment" rows="8" cols="75" class="form-control" ng-model="input.comment" ng-required="true"></textarea>
+                        <p class="help-block validation">please complete your comments</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4" id="upload-prompt">Your Uploads</label>
+                    <div class="col-sm-8">
+                        <button type="button" class="btn btn-default" ngf-select="true" ngf-change="onFileSelect($files)" aria-describedby="upload-prompt">Upload</button>
+                        <ol class="list-group" ng-show="files.length > 0">
+                            <li class="list-group-item" ng-repeat="f in files" role="alert">
+                                <div class="text-success" style="display: inline-block">
+                                    <i class="glyphicon glyphicon-refresh spinner" ng-show="f.uploading" aria-hidden="true"></i>
+                                    <i class="glyphicon glyphicon-ok" ng-show="!f.uploading" aria-hidden="true"></i>
+                                    <span class="hidden">File uploaded successfully</span>
+                                </div>
+                                {{f.name}}
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="form-group voffset3 text-center" ng-if="allowInput">
+                <button type="button" class="btn btn-action" ng-click="submit()">Save</button>
+                <button type="button" class="btn btn-action" ng-click="compose()">Email Customer</button>
+                <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+

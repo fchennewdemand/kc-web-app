@@ -1,0 +1,20 @@
+<div class="modal-header">
+    <h3 class="modal-title">Select Matched Contact</h3>
+</div>
+<div class="modal-body">
+    <div class="list-group">
+        <li class="list-group-item clearfix" ng-repeat="r in dupes">
+            <div>
+                <h4>{{r.Name}}</h4>
+                <span>{{r.Email}}</span><br/>
+                <span>{{r.Phone}}</span>
+                <div class="pull-right" style="margin-top: -40px;">
+                    <button type="button" class="btn btn-primary" ng-click="select(r)">Select</button>
+                </div>
+            </div>
+        </li>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="$dismiss()">No Match</button>
+</div>

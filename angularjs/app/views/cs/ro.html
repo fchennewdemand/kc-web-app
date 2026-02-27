@@ -1,0 +1,171 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h1>Mobility Services Comments</h1>
+        <div class="intro">
+            <p>Use this form for questions, comments or suggestions about your experience. Your feedback is important to us.
+                Please provide as much detail as possible so staff can research your concerns and ensure your feedback is handled appropriately.
+            </p>
+        </div>
+        <div class="text-danger" aria-hidden="true">* Required Fields</div>
+
+        <form name="form" novalidate="true" ng-submit="submit()">
+            <h2>Your Comment</h2>
+
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="commentType">Type of comment</label>
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <select id="commentType" name="commentType" class="form-control" ng-model="input.commentType"
+                                ng-options="p.value as p.label for p in commentTypes" ng-required="true">
+                            <option value="" selected="selected">Choose...</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">The type of comment is required.</p>
+            </div>
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="comment">Your Message</label>
+                <textarea id="comment" name="comment" class="form-control" rows="8" cols="75" ng-model="input.comment"
+                          ng-required="true" ng-maxlength="4000"></textarea>
+                <div ng-messages="form.comment.$error">
+                    <p ng-message="required" class="help-block validation" role="alert">You need to type something here.</p>
+                    <p ng-message="maxlength" class="help-block validation" role="alert">Maximum allowed length is 4000</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" id="upload-prompt">
+                    Your Uploads:
+                    <button type="button" class="btn btn-default" ngf-select="true" ngf-change="onFileSelect($files,$event)" aria-describedby="upload-prompt">Upload</button>
+                </label>
+                <ol class="list-group" ng-show="files.length > 0">
+                    <li class="list-group-item" ng-repeat="f in files" role="alert"><span class="text-success">
+          <i class="glyphicon glyphicon-refresh spinner" ng-show="f.uploading" aria-hidden="true"></i>
+          <i class="glyphicon glyphicon-ok" ng-show="!f.uploading" aria-hidden="true"></i>
+          <span class="hidden">File uploaded successfully</span>
+          </span> {{f.name}}
+                    </li>
+                </ol>
+            </div>
+
+            <h2>Comment Details</h2>
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="date">Date</label>
+                <p id="date-help">What day did this happen?</p>
+                <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                        <div class="input-group">
+                            <input id="date" type="text" class="form-control" name="date" ng-model="input.date" ng-required="true" uib-datepicker-popup="{{date.format}}" is-open="date.opened"
+                                   max-date="date.maxDate" min-date="date.minDate" alt-input-formats="date.inputFormats" ng-change="selectDate()" aria-describedby="date-help"/>
+                            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" tabindex="-1" aria-hidden="true" ng-click="date.open($event)" aria-label="calendar"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                        </div>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">Date is required and must be within last 30 days. Accepted formats: Month/Day/Year or Month/Day</p>
+            </div>
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="time" id="time-label">Time</label>
+                <p id="time-help">What time did this happen?</p>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input type="time" id="time" name="time" class="form-control" ng-model="input.time" ng-required="true" aria-describedby="time-help" time-input/>
+                    </div>
+                </div>
+                <p class="help-block validation" role="alert">Please select Time.</p>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="serviceType">Service Type</label>
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <select id="serviceType" name="serviceType" ng-model="input.serviceType" class="form-control" ng-change="selectType()" ng-options="p.value as p.label for p in serviceTypes">
+                            <option value="">Choose...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="bus">Vehicle Number</label>
+                <div class="row">
+                    <div class="col-md-3 col-xs-12">
+                        <input type="text" id="bus" name="bus" class="form-control" ng-model="input.bus"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" show-errors>
+                <label class="control-label" for="direction">Direction of Travel</label>
+                <p id="direction-help">For example, toward or away from downtown Seattle, toward or away from the Eastside or Bellevue, north, south, east or westbound. </p>
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <input type="text" id="direction" name="direction" class="form-control" ng-model="input.direction" aria-describedby="direction-help"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" show-errors>
+                <label class="control-label required" for="location">Location</label>
+                <p id="location-help">Where did the incident happen?</p>
+                <div class="row">
+                    <div class="col-md-6 col-xs-12">
+                        <input type="text" id="location" name="location" class="form-control" ng-model="input.location" ng-required="true" aria-describedby="location-help"/>
+                        <p class="help-block validation" role="alert">Location is required.</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h2>Your Contact Information</h2>
+                <div class="form-group">
+                    <div class="checkbox checkbox-primary">
+                        <input type="checkbox" name="anonymous" ng-model="input.anonymous" id="anonymous"><label for="anonymous">Anonymous</label>
+                    </div>
+                </div>
+
+                <div class="form-group" show-errors>
+                    <label class="control-label" ng-class="input.anonymous ? '' : 'required'" for="name">Name</label>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12">
+                            <input id="name" type="text" name="name" class="form-control" ng-model="input.name" ng-required="!input.anonymous"/>
+                        </div>
+                    </div>
+                    <p class="help-block validation" role="alert">Your name is required.</p>
+                </div>
+                <div class="form-group" show-errors>
+                    <label class="control-label" ng-class="input.anonymous ? '' : 'required'" for="email">Email</label>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12">
+                            <input id="email" type="email" name="email" class="form-control" ng-model="input.email" placeholder="name@domain.com"
+                                   ng-required="!input.anonymous"/>
+                        </div>
+                    </div>
+                    <p class="help-block validation" role="alert">Your email is required.</p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="phone">Phone Number</label>
+                    <p id="phone-help">Please include the area code.</p>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12">
+                            <input id="phone" type="phone" name="phone" class="form-control" ng-model="input.phone" aria-describedby="phone-help"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" show-errors="true">
+                    <label class="control-label required" for="contactPreference">How do you want to be contacted?</label>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12">
+                            <select id="contactPreference" name="contactPreference" class="form-control" ng-model="input.contactPreference"
+                                    ng-options="p.value as p.label for p in preferences" ng-required="true">
+                                <option value="" selected="selected">Choose...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <p class="help-block validation" role="alert">Please tell us how to contact you.</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-lg btn-action">Submit</button>
+                <button type="button" class="btn btn-lg btn-default pull-right" ng-click="cancel()">Cancel</button>
+            </div>
+
+        </form>
+    </div>
+</div>
