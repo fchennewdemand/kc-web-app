@@ -79,7 +79,11 @@ export default function (): AppSync {
                         let fileInput = Object.assign({name: file.name, type: file.type, size: file.size}, option || {})
                         let json = await this.lambda({name: `requestUpload`, skipBusy: true, input: fileInput})
                         await $fetch(json.payload.url, {method: 'PUT', body: file, headers: {'Content-Type': file.type}})
-                        return await this.lambda({name: `finishUpload`, skipBusy: true, input: json.payload})
+                        if(json.payload.parentId) {
+                            return await this.lambda({name: `finishUpload`, skipBusy: true, input: json.payload})
+                        } else {
+                            return json
+                        }
                     } catch (e) {
                         throw e
                     } finally {

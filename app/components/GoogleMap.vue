@@ -1,9 +1,13 @@
 <template>
-  <div ref="mapRef" class="w-full h-full"></div>
+  <GoogleMap :api-key="apiKey" :center="center" :zoom="zoom" class="w-full h-full">
+    <Marker v-for="(marker, i) in markers" :key="i" :options="{ position: marker }" />
+  </GoogleMap>
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(defineProps<{
+import { GoogleMap, Marker } from 'vue3-google-map'
+
+withDefaults(defineProps<{
   center?: { lat: number; lng: number }
   zoom?: number
   markers?: Array<{ lat: number; lng: number; title?: string }>
@@ -12,29 +16,5 @@ const props = withDefaults(defineProps<{
   zoom: 10
 })
 
-const mapRef = ref<HTMLElement>()
-const map = ref<google.maps.Map>()
-
-onMounted(() => {
-  if (!mapRef.value) return
-
-  map.value = new google.maps.Map(mapRef.value, {
-    center: props.center,
-    zoom: props.zoom
-  })
-
-  props.markers?.forEach(marker => {
-    new google.maps.Marker({
-      position: { lat: marker.lat, lng: marker.lng },
-      map: map.value,
-      title: marker.title
-    })
-  })
-})
-
-watch(() => props.center, (newCenter) => {
-  map.value?.setCenter(newCenter)
-})
-
-defineExpose({ map })
+const apiKey = useAppConfig().mapKey
 </script>

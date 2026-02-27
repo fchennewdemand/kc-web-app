@@ -10,22 +10,26 @@
       />
     </UFormField>
     <div v-if="selectedStop" class="mt-4">
-      <div id="map" class="h-[300px] w-full rounded-md"></div>
+      <GoogleMap :api-key="apiKey" :center="center" :zoom="16" class="h-[300px] w-full rounded-md">
+        <Marker :options="{ position: center }" />
+      </GoogleMap>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { GoogleMap, Marker } from 'vue3-google-map'
+
 const props = defineProps<{
   form: any
 }>()
 
 const { $nd } = useNuxtApp()
+const apiKey = useAppConfig().mapKey
 const searchTerm = ref('')
 const stops = ref<any[]>([])
 const selectedStop = ref<any>(null)
-let map: any = null
-let marker: any = null
+const center = computed(() => selectedStop.value ? { lat: selectedStop.value.lat, lng: selectedStop.value.lng } : { lat: 0, lng: 0 })
 
 watch(searchTerm, async (query) => {
   if (query.length < 2) {
@@ -41,43 +45,6 @@ watch(selectedStop, (stop) => {
     props.form.stop = stop.label
     props.form.stopId = stop.id
     props.form.location = stop.label
-    
-    nextTick(() => {
-      initMap(stop)
-    })
   }
-})
-
-const initMap = (stop: any) => {
-  if (!window.google) return
-  
-  const mapEl = document.getElementById('map')
-  if (!mapEl) return
-  
-  if (!map) {
-    map = new google.maps.Map(mapEl, {
-      center: { lat: stop.lat, lng: stop.lng },
-      zoom: 16
-    })
-  } else {
-    map.setCenter({ lat: stop.lat, lng: stop.lng })
-  }
-  
-  if (marker) {
-    marker.setMap(null)
-  }
-  
-  marker = new google.maps.Marker({
-    position: { lat: stop.lat, lng: stop.lng },
-    map: map,
-    title: stop.label
-  })
-}
-
-onMounted(() => {
-  const script = document.createElement('script')
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${useRuntimeConfig().public.googleMapsKey}`
-  script.async = true
-  document.head.appendChild(script)
 })
 </script>

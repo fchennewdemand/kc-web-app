@@ -105,7 +105,7 @@
         <UFormField label="Your Comment" name="comments" required help="Please provide any information necessary for us to research your comment or concern.">
           <UTextarea v-model="form.comments" :rows="8" class="w-full" :maxlength="4000" />
         </UFormField>
-        <FileUpload :form="form" label="Your Uploads" :multiple="true" />
+        <FileUpload label="Your Uploads" :multiple="true" />
         <div class="flex gap-2 mt-4">
           <UButton type="submit" color="primary">Submit</UButton>
           <UButton @click="navigateTo('/')" color="neutral">Cancel</UButton>

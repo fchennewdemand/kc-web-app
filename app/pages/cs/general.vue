@@ -27,7 +27,7 @@
         <UFormField label="Your Comment" name="comments" required help="Please provide any information necessary for us to research your comment or concern.">
           <UTextarea v-model="form.comments" :rows="8" :maxlength="4000" class="w-full" />
         </UFormField>
-        <FileUpload :form="form" label="Your Uploads" :multiple="true" />
+        <FileUpload ref="fileUploadRef" :form="form" label="Your Uploads" :multiple="true" />
         <div class="flex gap-2 mt-4">
           <UButton type="submit" color="primary">Submit</UButton>
           <UButton @click="navigateTo('/')" color="neutral">Cancel</UButton>
@@ -41,7 +41,7 @@
 import * as v from 'valibot'
 
 const { $nd } = useNuxtApp()
-const { onFileSelect } = useUpload()
+const fileUploadRef = ref()
 
 const schema = v.object({
   commentType: v.pipe(v.string(), v.minLength(1, 'Type of comment is required')),
@@ -78,7 +78,13 @@ onMounted(async () => {
 })
 
 const submit = async () => {
-  const json = await $nd.lambda('submitCase', form)
+  const json = await $nd.lambda('saveCase', {record: JSON.stringify(form)})
+  if (json.success) {
+    const uploadResults = fileUploadRef.value?.getResults() || []
+    for (const result of uploadResults) {
+      await $nd.lambda('finishUpload', {...result, parentId: json.payload.Id})
+    }
+  }
   await $nd.confirm(json.title, json.message, { color: 'success', actions: [{ label: 'Close', value: true }] })
   window.location.href = 'https://kingcounty.gov/depts/transportation/metro/contact-us.aspx'
 }

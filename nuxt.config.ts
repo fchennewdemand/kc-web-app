@@ -3,10 +3,5 @@ export default defineNuxtConfig({
     devtools: {enabled: true},
     css: ['~/assets/app.css'],
     modules: ['@nuxt/ui'],
-    ssr: false,
-    runtimeConfig: {
-        public: {
-            googleMapsKey: 'AIzaSyCwyvse6Ef9oLAIN4m6g3hJAqmMlsIiZRg'
-        }
-    }
+    ssr: false
 })
