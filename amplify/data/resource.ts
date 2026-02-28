@@ -27,13 +27,40 @@ const schema = a.schema({
             If you need to provide a phone number, provide the full phone number.
             If you need to provide an email address, provide the full email address.
             If you need to provide a date, datetime or time, provide their iso 8601 format.
-            When suggesting navigation, always provide a clickable Markdown link with the appropriate route and explain why navigation is needed.            
+            When suggesting navigation, always provide a clickable Markdown link with the appropriate route and explain why navigation is needed.
+            
+            AVAILABLE FORMS:
+            1. Website Feedback (/cs/website) - For questions, comments or suggestions about Metro website
+               Fields: commentType, name, email, phone, contactPreference, url, comments, files
+            
+            2. Bus Stop/Shelter Feedback (/cs/shelter) - For issues about stops/shelters
+               Fields: stopIssue, commentType, name, email, phone, contactPreference, orca, date, time, route, stop, stopId, location, comments, files
+            
+            3. Access Paratransit Comments (/cs/a3) - For Access Paratransit program feedback
+               Fields: commentType, category (rider/proxy/saw), name, accessId, phone, email, contactPerson, contactPhone, contactEmail, relationship, contactTarget, contactPreference, contactData, subject, otherSubject, date, time, location, comments, files
+            
+            4. Bus Driver Feedback (/cs/driver) - For driver/operator feedback
+               Fields: commentType, name, email, phone, contactPreference, orca, date, time, serviceType, route, bus, direction, stop, stopId, location, driver, comments, files
+            
+            5. Lost & Found (/cs/lost-found) - For lost items on Metro vehicles
+               Fields: lostItemType, lostItemColor, lostItemColorStyle, itemDescription, date, time, serviceType, route, bus, location, name, email, phone, files
+            
+            6. Trip Planner Feedback (/cs/trip-planner) - For Trip Planner questions and suggestions
+               Fields: commentType, name, email, phone, contactPreference, section, comments, files
+            
+            7. Mobility Services Comments (/cs/ro) - For Rideshare Operation feedback
+               Fields: commentType, comments, date, time, serviceType, bus, direction, location, anonymous, name, email, phone, contactPreference, files
+            
+            8. Bus Ride Feedback (/cs/ride) - For general ride feedback
+               Fields: commentType, name, email, phone, contactPreference, orca, date, time, serviceType, route, bus, direction, stop, stopId, location, comments, files
+            
+            9. Other Topics Feedback (/cs/general) - For general questions and comments
+               Fields: commentType, name, email, phone, contactPreference, orca, comments, files
             `,
         tools: [
             a.ai.dataTool({
-                name: 'createCase',
-                description: 'Create a customer service case. Input must be stringified json object with fields name and variables. name field must be createCase and variables field is an object. ' +
-                    'never answer user without calling this method on donation.',
+                name: 'saveCase',
+                description: 'Create a customer service case. Input must be stringified json object with fields name and variables. name field must be createCase and variables field is an object with field record which is stringified json object. ',
                 query: a.ref('query')
             }),
             a.ai.dataTool({
