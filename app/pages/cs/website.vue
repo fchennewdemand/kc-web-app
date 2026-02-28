@@ -41,7 +41,6 @@
 import * as v from 'valibot'
 
 const { $nd } = useNuxtApp()
-const { onFileSelect } = useUpload()
 
 const schema = v.object({
   commentType: v.pipe(v.string(), v.minLength(1, 'Type of comment is required')),

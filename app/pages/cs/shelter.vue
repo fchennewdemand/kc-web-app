@@ -57,7 +57,6 @@
 import * as v from 'valibot'
 
 const { $nd } = useNuxtApp()
-const { onFileSelect } = useUpload()
 
 const schema = v.object({
   stopIssue: v.pipe(v.string(), v.minLength(1, 'Issue type is required')),

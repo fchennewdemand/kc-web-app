@@ -1,7 +1,9 @@
 <template>
     <div class="flex flex-col h-screen">
-        <u-header :title="title" icon="i-lucide-message-circle" :actions="actions"/>
-        <chat-bot class="flex-1" @navigate="handleNavigation" :success-message="successMessage || undefined" :initial-question="initialQuestion || undefined"/>
+        <UContainer class="flex-1 flex flex-col overflow-hidden">
+            <h2 class="py-4">AI Chat</h2>
+            <chat-bot class="flex-1 overflow-hidden" @navigate="handleNavigation" :success-message="successMessage || undefined" :initial-question="initialQuestion || undefined"/>
+        </UContainer>
     </div>
 </template>
 

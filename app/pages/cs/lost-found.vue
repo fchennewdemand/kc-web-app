@@ -69,7 +69,6 @@
 import * as v from 'valibot'
 
 const { $nd } = useNuxtApp()
-const { onFileSelect } = useUpload()
 
 const schema = v.object({
   lostItemType: v.pipe(v.string(), v.minLength(1, 'Item type is required')),
