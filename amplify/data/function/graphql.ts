@@ -14,6 +14,7 @@ interface MethodProps {
 
 const appUrl = env.APP_URL
 const appKey = env.API_KEY
+console.log(appUrl,'app base url')
 const options = {headers: {Authorization: `ApiKey ${appKey}`}}
 const endpoints = new Map<String, MethodProps>()
 endpoints.set("viewFile", {endpoint: 'v1/connector/file/download'})
